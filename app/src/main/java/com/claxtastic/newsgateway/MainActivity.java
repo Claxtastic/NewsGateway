@@ -32,10 +32,11 @@ public class MainActivity extends AppCompatActivity {
         this.drawerLayout = findViewById(R.id.drawer_layout);
         this.drawerList = findViewById(R.id.drawer_list);
 
+        setupDrawerLayout();
         new AsyncSourcesDownloader(this).execute();
     }
 
-    public void initializeDrawerLayout() {
+    public void setupDrawerLayout() {
         this.drawerList.setOnItemClickListener(
                 new ListView.OnItemClickListener() {
                     @Override
@@ -51,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 R.string.drawer_open,
                 R.string.drawer_close
         );
-
-        this.drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_item, this.sources));
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -69,9 +70,17 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-//        setTitle(item.getTitle());
-//        ArrayList<>
-        return false;
+        // TODO: Fix this so it acts on clicking actual menu items rather than submenus
+
+        setTitle("News Gateway (" + this.sources.size() + ")");
+        ((ArrayAdapter) drawerList.getAdapter()).notifyDataSetChanged();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
     }
 
     /* Response from AsyncSourcesDownloader */
@@ -80,9 +89,6 @@ public class MainActivity extends AppCompatActivity {
         HashSet<String> languages = sets.get(1);
         HashSet<String> countries = sets.get(2);
 
-        for (Source source : sources)
-            Log.d(TAG, "handleSourcesAPIResponse: " + source.toString());
-        // TODO: Map country and language codes to full strings
         // TODO: Add default 'all' option to topics, languages, countries
         /* Add topics to topics submenu */
         MenuItem item = menuBar.getItem(0);
@@ -90,19 +96,27 @@ public class MainActivity extends AppCompatActivity {
         for (String topic: topics)
             subMenu.add(topic);
 
-        /* Add languages to languages submenu */
-        item = menuBar.getItem(1);
-        subMenu = item.getSubMenu();
-        for (String language : languages)
-            subMenu.add(language);
+        try {
+            /* Add languages to languages submenu */
+            item = menuBar.getItem(1);
+            subMenu = item.getSubMenu();
+            ArrayList<String> fullLanguageStrings = Utilities.parseLanguageJson(languages, getResources().openRawResource(R.raw.language_codes));
+            for (String language : fullLanguageStrings)
+                subMenu.add(language);
 
-        /* Add countries to countries submenu */
-        item = menuBar.getItem(2);
-        subMenu = item.getSubMenu();
-        for (String country : countries)
-            subMenu.add(country);
+            /* Add countries to countries submenu */
+            item = menuBar.getItem(2);
+            subMenu = item.getSubMenu();
+            ArrayList<String> fullCountryStrings = Utilities.parseCountryJson(countries, getResources().openRawResource(R.raw.country_codes));
+            for (String country : fullCountryStrings)
+                subMenu.add(country);
+
+        } catch (Exception e) {
+            Log.e(TAG, "handleSourcesAPIResponse: ", e);
+        }
 
         this.sources = sources;
-        initializeDrawerLayout();
+        this.drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_item, this.sources));
+        setTitle("News Gateway (" + this.sources.size() + ")");
     }
 }

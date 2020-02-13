@@ -21,8 +21,6 @@ public class AsyncSourcesDownloader extends AsyncTask<String, Void, String> {
 
     private MainActivity mainActivity;
 
-//    private ArrayList<Source> sources;
-
     AsyncSourcesDownloader(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
