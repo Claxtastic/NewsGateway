@@ -30,6 +30,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="Updated 12:21 PM ET, Thu February 13, 2020 "
+            android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textview_headline" />
 
@@ -38,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="Dan Merica"
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"

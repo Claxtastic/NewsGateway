@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
-import android.util.Log;
 
 public class Utilities {
     private static final String TAG = "Utilities";

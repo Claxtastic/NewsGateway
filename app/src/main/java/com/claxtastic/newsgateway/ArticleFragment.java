@@ -3,7 +3,6 @@ package com.claxtastic.newsgateway;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,26 +53,45 @@ public class ArticleFragment extends Fragment {
 
         headlineView.setText(currentArticle.getTitle());
         dateView.setText(currentArticle.getPublishedAt());
-        authorView.setText(currentArticle.getAuthor());
-        Picasso.get()
-                .load(currentArticle.getUrlToImage())
-                .placeholder(R.drawable.noimage)
-                .error(R.drawable.brokenimage)
-                .into(imageView);
+
+        if (currentArticle.getAuthor() == null)
+            authorView.setText("");
+        else
+            authorView.setText(currentArticle.getAuthor());
+
+        if (currentArticle.getUrlToImage() == null) {
+            Picasso.get().load(R.drawable.noimage).into(imageView);
+        } else {
+            Picasso.get()
+                    .load(currentArticle.getUrlToImage())
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.brokenimage)
+                    .into(imageView);
+        }
         articleTextView.setText(currentArticle.getDescription());
         countView.setText(String.format(Locale.US, "%d of %d", index, total));
 
+        /* Set onClick for all the article data views */
+        headlineView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { onInfoClick(currentArticle.getUrl()); }});
+        dateView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { onInfoClick(currentArticle.getUrl()); }});
+        authorView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { onInfoClick(currentArticle.getUrl()); }});
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                onImageClick(currentArticle.getUrl());
-            }
-        });
+            public void onClick(View v) { onInfoClick(currentArticle.getUrl()); }});
+        articleTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { onInfoClick(currentArticle.getUrl()); }});
 
         return fragmentLayout;
     }
 
-    public void onImageClick(String url) {
+    public void onInfoClick(String url) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW);
         browserIntent.setData(Uri.parse(url));
         startActivity(browserIntent);

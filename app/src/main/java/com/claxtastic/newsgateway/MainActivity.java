@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
                 new ListView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        TODO: startActivity(intent) article/source activity
                         onClickSource(position);
                         drawerLayout.closeDrawer(drawerList);
                     }
@@ -157,8 +156,9 @@ public class MainActivity extends AppCompatActivity {
         MenuItem item = menuBar.getItem(0);
         SubMenu subMenu = item.getSubMenu();
         subMenu.add("all");
-        for (String topic: topics)
+        for (String topic: topics) {
             subMenu.add(topic);
+        }
 
         try {
             /* Add languages to languages submenu */
@@ -222,8 +222,9 @@ public class MainActivity extends AppCompatActivity {
 
         fragments.clear();
 
-        for (int i = 0; i < articles.size(); i++)
-            fragments.add(ArticleFragment.newInstance(articles.get(i), i+1, articles.size()));
+        for (int i = 0; i < articles.size(); i++) {
+            fragments.add(ArticleFragment.newInstance(articles.get(i), i + 1, articles.size()));
+        }
 
         articlePagerAdapter.notifyDataSetChanged();
 

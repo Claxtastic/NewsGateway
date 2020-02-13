@@ -70,7 +70,24 @@ public class AsyncArticleDownloader extends AsyncTask<String, Void, String> {
                 String description = articleJsonObject.getString("description");
                 String url = articleJsonObject.getString("url");
                 String urlToImage = articleJsonObject.getString("urlToImage");
-                String publishedAt = articleJsonObject.getString("publishedAt");
+
+                String publishedAt = "";
+                try {
+//                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//                    Date date = dateFormat.parse(articleJsonObject.getString("publishedAt"));
+                    String[] parts = articleJsonObject.getString("publishedAt").split("-");
+                    String year = parts[0];
+                    String month = parts[1];
+                    String[] otherParts = parts[2].split("T");
+                    String day = otherParts[0];
+                    String[] hourMin = otherParts[1].split(":");
+                    String hour = hourMin[0];
+                    String min = hourMin[1];
+                    publishedAt = month + "-" + day + "-" + year + " " + hour + ":" + min;
+                } catch (Exception e) {
+                    /* Default to whatever json says */
+                    publishedAt = articleJsonObject.getString("publishedAt");
+                }
 
                 articleList.add(new Article(author, title, description, url, urlToImage, publishedAt));
             }
