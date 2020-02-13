@@ -61,10 +61,10 @@ public class Utilities {
         for (Source source : unfilteredSources)
             if (source.getCategory().equals(topic))
                 filteredSources.add(source);
-        Log.d(TAG, "filterOnTopic: " + filteredSources.size());
         return filteredSources;
     }
 
+    /* Return lowercase language code given language name */
     public static String getLanguageCode(String language, InputStream inputStream) {
         try {
             int size = inputStream.available();
@@ -77,7 +77,7 @@ public class Utilities {
             for (int i = 0; i < languageJsonArray.length(); i++) {
                 JSONObject languagePairJsonObject = languageJsonArray.getJSONObject(i);
                 if (languagePairJsonObject.getString("name").equals(language))
-                    return languagePairJsonObject.getString("code");
+                    return languagePairJsonObject.getString("code").toLowerCase();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,6 +85,7 @@ public class Utilities {
         return null;
     }
 
+    /* Return lowercase country code given country name */
     public static String getCountryCode(String country, InputStream inputStream) {
         try {
             int size = inputStream.available();
@@ -94,11 +95,10 @@ public class Utilities {
             inputStream.close();
             JSONObject countryJsonObject = new JSONObject(new String(buffer, "UTF-8"));
             JSONArray countryJsonArray = countryJsonObject.getJSONArray("countries");
-            Log.d(TAG, "getCountryCode: " + country);
             for (int i = 0; i < countryJsonArray.length(); i++) {
                 JSONObject countryPairJsonObject = countryJsonArray.getJSONObject(i);
                 if (countryPairJsonObject.getString("name").equals(country))
-                    return countryPairJsonObject.getString("code");
+                    return countryPairJsonObject.getString("code").toLowerCase();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,14 +108,9 @@ public class Utilities {
 
     public static ArrayList<Source> filterOnLanguage(ArrayList<Source> unfilteredSources, String language) {
         ArrayList<Source> filteredSources = new ArrayList<>();
-
-        Log.d(TAG, "filterOnLanguage: " + language);
         for (Source source : unfilteredSources)
-            if (source.getLanguage().equals(language)) {
-                Log.d(TAG, "filterOnLanguage: " + source.getLanguage());
+            if (source.getLanguage().equals(language))
                 filteredSources.add(source);
-            }
-        Log.d(TAG, "filterOnLanguage: " + filteredSources.size());
         return filteredSources;
     }
 
@@ -124,7 +119,6 @@ public class Utilities {
         for (Source source : unfilteredSources)
             if (source.getCountry().equals(country))
                 filteredSources.add(source);
-        Log.d(TAG, "filterOnCountry: " + filteredSources.size());
         return filteredSources;
     }
 }

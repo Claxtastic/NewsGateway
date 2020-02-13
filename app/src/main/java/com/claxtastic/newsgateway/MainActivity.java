@@ -1,6 +1,7 @@
 package com.claxtastic.newsgateway;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import android.os.Bundle;
@@ -24,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
 
-    private ArrayList<Source> sources;
+    private ArrayList<Source> currentSources;
+    private ArrayList<Source> allSources;
     private String categoryExpanded;
 
     @Override
@@ -90,37 +92,37 @@ public class MainActivity extends AppCompatActivity {
                     /* topic type selected */
                     case "topics":
                         if (item.getTitle().equals("all")) {
-                            // TODO
+                            Toast.makeText(this, "Resetting source list", Toast.LENGTH_SHORT).show();
+                            updateDrawerList(this.allSources);
                             return super.onOptionsItemSelected(item);
                         }
-                        this.sources = Utilities.filterOnTopic(this.sources, (String) item.getTitle());
-
-                        setTitle("News Gateway (" + this.sources.size() + ")");
-                        ((ArrayAdapter) drawerList.getAdapter()).notifyDataSetChanged();
+                        ArrayList<Source> topicFilteredSources = Utilities.filterOnTopic(this.currentSources, (String) item.getTitle());
+                        updateDrawerList(topicFilteredSources);
                         return super.onOptionsItemSelected(item);
                     /* language type selected */
                     case "languages":
                         if (item.getTitle().equals("all")) {
-                            // TODO
+                            updateDrawerList(this.allSources);
+                            Toast.makeText(this, "Resetting source list", Toast.LENGTH_SHORT).show();
                             return super.onOptionsItemSelected(item);
                         }
                         String languageCode = Utilities.getLanguageCode((String) item.getTitle(), getResources().openRawResource(R.raw.language_codes));
-                        this.sources = Utilities.filterOnLanguage(this.sources, languageCode.toLowerCase());
+                        ArrayList<Source> languageFilteredSources = Utilities.filterOnLanguage(this.currentSources, languageCode);
+                        updateDrawerList(languageFilteredSources);
 
-                        setTitle("News Gateway (" + this.sources.size() + ")");
-                        ((ArrayAdapter) drawerList.getAdapter()).notifyDataSetChanged();
+                        for (Source source : currentSources)
+                            Log.d(TAG, "onOptionsItemSelected: " + source.getName());
                         return super.onOptionsItemSelected(item);
                     /* country type selected */
                     case "countries":
                         if (item.getTitle().equals("all")) {
-                            // TODO
+                            Toast.makeText(this, "Resetting source list", Toast.LENGTH_SHORT).show();
+                            updateDrawerList(this.allSources);
                             return super.onOptionsItemSelected(item);
                         }
                         String countryCode = Utilities.getCountryCode((String) item.getTitle(), getResources().openRawResource(R.raw.country_codes));
-                        this.sources = Utilities.filterOnCountry(this.sources, countryCode.toLowerCase());
-
-                        setTitle("News Gateway (" + this.sources.size() + ")");
-                        ((ArrayAdapter) drawerList.getAdapter()).notifyDataSetChanged();
+                        ArrayList<Source> countryFilteredSources = Utilities.filterOnCountry(this.currentSources, countryCode);
+                        updateDrawerList(countryFilteredSources);
                         return super.onOptionsItemSelected(item);
                 }
         }
@@ -168,9 +170,28 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "handleSourcesAPIResponse: ", e);
         }
 
-        this.sources = sources;
-        this.drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_item, this.sources));
-        setTitle("News Gateway (" + this.sources.size() + ")");
+        /* Saved downloaded sources twice */
+        this.allSources = new ArrayList<>();
+        allSources.addAll(sources);
+        this.currentSources = sources;
+
+        this.drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_item, this.currentSources));
+        setTitle("News Gateway (" + this.currentSources.size() + ")");
+    }
+
+    /* Update sources list with new list of sources */
+    public void updateDrawerList(ArrayList<Source> newSources) {
+        /* Filter options produced a 0 list, reject */
+        if (newSources.size() == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Invalid filter options").setMessage("The topic/language/country options selected produced no results.").show();
+            return;
+        }
+
+        this.currentSources.clear();
+        this.currentSources.addAll(newSources);
+        setTitle("News Gateway (" + this.currentSources.size() + ")");
+        ((ArrayAdapter) drawerList.getAdapter()).notifyDataSetChanged();
     }
 
     /* Response from AsyncArticleDownloader */
