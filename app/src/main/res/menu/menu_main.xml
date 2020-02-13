@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_topics"
+        android:title="Topics">
+        <menu android:id="@+id/submenu_topics">
+        </menu>
+    </item>
 
+    <item
+        android:id="@+id/item_languages"
+        android:title="Langugaes">
+        <menu android:id="@+id/submenu_languages">
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/item_countries"
+        android:title="Countries">
+        <menu android:id="@+id/submenu_countries">
+        </menu>
+    </item>
 </menu>
