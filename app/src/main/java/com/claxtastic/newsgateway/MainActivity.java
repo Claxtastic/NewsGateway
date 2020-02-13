@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
         HashSet<String> languages = sets.get(1);
         HashSet<String> countries = sets.get(2);
 
-        // TODO: Add default 'all' option to topics, languages, countries
         /* Add topics to topics submenu */
         MenuItem item = menuBar.getItem(0);
         SubMenu subMenu = item.getSubMenu();
