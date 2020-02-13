@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
 
     private ArrayList<Source> sources;
+    private String categoryExpanded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +69,61 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (this.drawerToggle.onOptionsItemSelected(item)) {
-            Log.d(TAG, "onOptionsItemSelected: " + item);
             return true;
         }
 
-        // TODO: Fix this so it acts on clicking actual menu items rather than submenus
+        switch (item.getItemId()) {
+            /* for each category, set a flag so we know how to categorize the filter option */
+            case R.id.item_topics:
+                this.categoryExpanded = "topics";
+                return true;
+            case R.id.item_languages:
+                this.categoryExpanded = "languages";
+                return true;
+            case R.id.item_countries:
+                this.categoryExpanded = "countries";
+                return true;
 
-        setTitle("News Gateway (" + this.sources.size() + ")");
-        ((ArrayAdapter) drawerList.getAdapter()).notifyDataSetChanged();
+            default:
+                /* something other than a category was selected */
+                switch (categoryExpanded) {
+                    /* topic type selected */
+                    case "topics":
+                        if (item.getTitle().equals("all")) {
+                            // TODO
+                            return super.onOptionsItemSelected(item);
+                        }
+                        this.sources = Utilities.filterOnTopic(this.sources, (String) item.getTitle());
+
+                        setTitle("News Gateway (" + this.sources.size() + ")");
+                        ((ArrayAdapter) drawerList.getAdapter()).notifyDataSetChanged();
+                        return super.onOptionsItemSelected(item);
+                    /* language type selected */
+                    case "languages":
+                        if (item.getTitle().equals("all")) {
+                            // TODO
+                            return super.onOptionsItemSelected(item);
+                        }
+                        String languageCode = Utilities.getLanguageCode((String) item.getTitle(), getResources().openRawResource(R.raw.language_codes));
+                        this.sources = Utilities.filterOnLanguage(this.sources, languageCode.toLowerCase());
+
+                        setTitle("News Gateway (" + this.sources.size() + ")");
+                        ((ArrayAdapter) drawerList.getAdapter()).notifyDataSetChanged();
+                        return super.onOptionsItemSelected(item);
+                    /* country type selected */
+                    case "countries":
+                        if (item.getTitle().equals("all")) {
+                            // TODO
+                            return super.onOptionsItemSelected(item);
+                        }
+                        String countryCode = Utilities.getCountryCode((String) item.getTitle(), getResources().openRawResource(R.raw.country_codes));
+                        this.sources = Utilities.filterOnCountry(this.sources, countryCode.toLowerCase());
+
+                        setTitle("News Gateway (" + this.sources.size() + ")");
+                        ((ArrayAdapter) drawerList.getAdapter()).notifyDataSetChanged();
+                        return super.onOptionsItemSelected(item);
+                }
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -93,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         /* Add topics to topics submenu */
         MenuItem item = menuBar.getItem(0);
         SubMenu subMenu = item.getSubMenu();
+        subMenu.add("all");
         for (String topic: topics)
             subMenu.add(topic);
 
@@ -100,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
             /* Add languages to languages submenu */
             item = menuBar.getItem(1);
             subMenu = item.getSubMenu();
+            subMenu.add("all");
             ArrayList<String> fullLanguageStrings = Utilities.parseLanguageJson(languages, getResources().openRawResource(R.raw.language_codes));
             for (String language : fullLanguageStrings)
                 subMenu.add(language);
@@ -107,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
             /* Add countries to countries submenu */
             item = menuBar.getItem(2);
             subMenu = item.getSubMenu();
+            subMenu.add("all");
             ArrayList<String> fullCountryStrings = Utilities.parseCountryJson(countries, getResources().openRawResource(R.raw.country_codes));
             for (String country : fullCountryStrings)
                 subMenu.add(country);

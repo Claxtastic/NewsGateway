@@ -9,7 +9,7 @@
 
     <item
         android:id="@+id/item_languages"
-        android:title="Langugaes">
+        android:title="Languages">
         <menu android:id="@+id/submenu_languages">
         </menu>
     </item>
