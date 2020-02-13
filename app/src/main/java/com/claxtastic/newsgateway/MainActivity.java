@@ -119,4 +119,9 @@ public class MainActivity extends AppCompatActivity {
         this.drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_item, this.sources));
         setTitle("News Gateway (" + this.sources.size() + ")");
     }
+
+    /* Response from AsyncArticleDownloader */
+    public void handleArticlesAPIResponse(ArrayList<Article> articles) {
+//        TODO
+    }
 }

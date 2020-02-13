@@ -50,16 +50,15 @@ public class AsyncSourcesDownloader extends AsyncTask<String, Void, String> {
     }
 
     @Override protected void onPostExecute(String sourcesJsonString) {
-        ArrayList<Source> sourceList = parseSourcesJSON(sourcesJsonString);
+        ArrayList<Source> sourceList = parseSourcesJson(sourcesJsonString);
         if (sourceList != null) {
             ArrayList<HashSet<String>> sets = getTopicsLanguagesCountries(sourceList);
             mainActivity.handleSourcesAPIResponse(sourceList, sets);
         }
     }
 
-    private ArrayList<Source> parseSourcesJSON(String jsonString) {
+    private ArrayList<Source> parseSourcesJson(String jsonString) {
         ArrayList<Source> sourceList = new ArrayList<>();
-        Log.d(TAG, "parseSourcesJSON: " + jsonString);
         try {
             JSONObject rootJson = new JSONObject(jsonString);
             JSONArray sourcesJsonArray = rootJson.getJSONArray("sources");
