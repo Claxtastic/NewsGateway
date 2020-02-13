@@ -4,8 +4,13 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
     tools:context="com.claxtastic.newsgateway.MainActivity">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background" />
 
     <ListView
         android:id="@+id/drawer_list"
@@ -13,6 +18,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/background_dark"
-        android:choiceMode="singleChoice" />
+        android:choiceMode="singleChoice" >
+
+    </ListView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

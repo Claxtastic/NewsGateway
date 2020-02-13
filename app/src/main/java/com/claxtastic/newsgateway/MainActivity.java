@@ -4,6 +4,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,9 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -24,10 +26,14 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
+    private ViewPager pager;
+    private ArticlePagerAdapter articlePagerAdapter;
 
     private ArrayList<Source> currentSources;
     private ArrayList<Source> allSources;
+    private List<Fragment> fragments = new ArrayList<>();
     private String categoryExpanded;
+    private String selectedSourceName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                        TODO: startActivity(intent) article/source activity
+                        onClickSource(position);
+                        drawerLayout.closeDrawer(drawerList);
                     }
                 }
         );
@@ -59,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
         );
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        articlePagerAdapter = new ArticlePagerAdapter(getSupportFragmentManager(), fragments);
+        pager = findViewById(R.id.viewpager);
+        pager.setAdapter(articlePagerAdapter);
     }
 
     @Override
@@ -193,8 +205,28 @@ public class MainActivity extends AppCompatActivity {
         ((ArrayAdapter) drawerList.getAdapter()).notifyDataSetChanged();
     }
 
+    /* Called by drawer's onItemClickListener */
+    public void onClickSource(int position) {
+        pager.setBackground(null);
+        Source selectedSource = currentSources.get(position);
+        selectedSourceName = selectedSource.getName();
+        new AsyncArticleDownloader(this, selectedSource.getId()).execute();
+        drawerLayout.closeDrawer(drawerList);
+    }
+
     /* Response from AsyncArticleDownloader */
     public void handleArticlesAPIResponse(ArrayList<Article> articles) {
-//        TODO
+        setTitle(selectedSourceName);
+        for (int i = 0; i < articlePagerAdapter.getCount(); i++)
+            articlePagerAdapter.notifyChangeInPosition(i);
+
+        fragments.clear();
+
+        for (int i = 0; i < articles.size(); i++)
+            fragments.add(ArticleFragment.newInstance(articles.get(i), i+1, articles.size()));
+
+        articlePagerAdapter.notifyDataSetChanged();
+
+        pager.setCurrentItem(0);
     }
 }

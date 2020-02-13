@@ -19,13 +19,15 @@ public class AsyncArticleDownloader extends AsyncTask<String, Void, String> {
     private final String KEY = "30b6e774879741cb982dbd39a3153b17";
 
     private MainActivity mainActivity;
+    private String sourceName;
 
-    AsyncArticleDownloader(MainActivity mainActivity) { this.mainActivity = mainActivity; }
+    AsyncArticleDownloader(MainActivity mainActivity, String sourceName) {
+        this.mainActivity = mainActivity;
+        this.sourceName = sourceName;
+    }
 
     @Override
     protected String doInBackground(String... params) {
-//        TODO: get source name from passed string params
-        String sourceName = "";
         Uri dataUri = Uri.parse(BASE_URL + sourceName + API_PARAM + KEY);
         String urlToUse = dataUri.toString();
 

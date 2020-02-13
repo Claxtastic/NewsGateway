@@ -1,6 +1,8 @@
 package com.claxtastic.newsgateway;
 
-public class Article {
+import java.io.Serializable;
+
+public class Article implements Serializable {
     private String author;
     private String title;
     private String description;
