@@ -80,9 +80,9 @@ public class AsyncSourcesDownloader extends AsyncTask<String, Void, String> {
 
     private ArrayList<HashSet<String>> getTopicsLanguagesCountries(ArrayList<Source> sources) {
         ArrayList<HashSet<String>> sets = new ArrayList<>();
-        HashSet<String> topics = new HashSet<String>();
-        HashSet<String> languages = new HashSet<String>();
-        HashSet<String> countries = new HashSet<String>();
+        HashSet<String> topics = new HashSet<>();
+        HashSet<String> languages = new HashSet<>();
+        HashSet<String> countries = new HashSet<>();
         for (Source source : sources) {
             topics.add(source.getCategory());
             languages.add(source.getLanguage());
