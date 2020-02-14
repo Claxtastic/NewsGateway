@@ -7,6 +7,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -32,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Source> currentSources;
     private ArrayList<Source> allSources;
     private List<Fragment> fragments = new ArrayList<>();
+    private HashMap<String, Integer> topicIntMap = new HashMap<>();
     private String categoryExpanded;
     private String selectedSourceName;
+    private int[] topicColors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.drawerLayout = findViewById(R.id.drawer_layout);
         this.drawerList = findViewById(R.id.drawer_list);
+        topicColors = getResources().getIntArray(R.array.topicColors);
 
         setupDrawerLayout();
         new AsyncSourcesDownloader(this).execute();
@@ -107,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                             updateDrawerList(this.allSources);
                             return super.onOptionsItemSelected(item);
                         }
-                        ArrayList<Source> topicFilteredSources = Utilities.filterOnTopic(this.currentSources, (String) item.getTitle());
+                        ArrayList<Source> topicFilteredSources = Utilities.filterOnTopic(this.currentSources, item.getTitle().toString());
                         updateDrawerList(topicFilteredSources);
                         return super.onOptionsItemSelected(item);
                     /* language type selected */
@@ -156,8 +162,22 @@ public class MainActivity extends AppCompatActivity {
         MenuItem item = menuBar.getItem(0);
         SubMenu subMenu = item.getSubMenu();
         subMenu.add("all");
+        int i = 0;
         for (String topic: topics) {
-            subMenu.add(topic);
+            SpannableString topicString = new SpannableString(topic);
+            topicString.setSpan(new ForegroundColorSpan(topicColors[i]), 0, topicString.length(), 0);
+            topicIntMap.put(topic, topicColors[i]);
+            subMenu.add(topicString);
+            i++;
+        }
+
+        for (Source source : sources) {
+            if (topicIntMap.containsKey(source.getCategory())) {
+                int color = topicIntMap.get(source.getCategory());
+                SpannableString coloredString = new SpannableString(source.getName());
+                coloredString.setSpan(new ForegroundColorSpan(color), 0, source.getName().length(), 0);
+                source.setColoredName(coloredString);
+            }
         }
 
         try {
@@ -186,7 +206,8 @@ public class MainActivity extends AppCompatActivity {
         allSources.addAll(sources);
         this.currentSources = sources;
 
-        this.drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_item, this.currentSources));
+//        this.drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_item, this.currentSources));
+        this.drawerList.setAdapter(new SourceArrayAdapter(this, R.layout.drawer_item, this.currentSources));
         setTitle("News Gateway (" + this.currentSources.size() + ")");
     }
 

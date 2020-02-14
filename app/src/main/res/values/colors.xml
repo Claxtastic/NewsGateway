@@ -3,4 +3,21 @@
     <color name="colorPrimary">#1976d2</color>
     <color name="colorPrimaryDark">#004ba0</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="color1">#C39900</color>
+    <color name="color2">#678119</color>
+    <color name="color3">#42d4f4</color>
+    <color name="color4">#f032e6</color>
+    <color name="color5">#e6194B</color>
+    <color name="color6">#568669</color>
+    <color name="color7">#469990</color>
+    <array name="topicColors">
+        <item>@color/color1</item>
+        <item>@color/color2</item>
+        <item>@color/color3</item>
+        <item>@color/color4</item>
+        <item>@color/color5</item>
+        <item>@color/color6</item>
+        <item>@color/color7</item>
+    </array>
 </resources>
