@@ -33,7 +33,7 @@ public class Source  {
     public void setId(String id) { this.id = id; }
     public void setName(String name) { this.name = name; }
     public void setCategory(String category) { this.category = category; }
-    public void setLanguage() { this.language = language; }
+    public void setLanguage(String language) { this.language = language; }
     public void setCountry(String country) { this.country = country; }
     public void setColoredName(SpannableString coloredName) { this.coloredName = coloredName; }
 

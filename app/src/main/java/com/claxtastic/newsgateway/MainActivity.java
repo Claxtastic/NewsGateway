@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "handleSourcesAPIResponse: ", e);
         }
 
-        /* Saved downloaded sources twice */
+        /* Save downloaded sources twice */
         this.allSources = new ArrayList<>();
         allSources.addAll(sources);
         this.currentSources = sources;

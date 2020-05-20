@@ -1,7 +1,13 @@
 package com.claxtastic.newsgateway;
 
+import android.util.Log;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -78,7 +84,11 @@ public class Utilities {
                 if (languagePairJsonObject.getString("name").equals(language))
                     return languagePairJsonObject.getString("code").toLowerCase();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            Log.d(TAG, "getLanguageCode: Error with input stream");
+            e.printStackTrace();
+        } catch (JSONException e) {
+            Log.d(TAG, "getLanguageCode: Error reading JSON");
             e.printStackTrace();
         }
         return null;
@@ -99,7 +109,11 @@ public class Utilities {
                 if (countryPairJsonObject.getString("name").equals(country))
                     return countryPairJsonObject.getString("code").toLowerCase();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            Log.d(TAG, "getCountryCode: Error with input stream");
+            e.printStackTrace();
+        } catch (JSONException e) {
+            Log.d(TAG, "getCountryCode: Error reading JSON");
             e.printStackTrace();
         }
         return null;
