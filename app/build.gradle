@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
+apply plugin: "com.github.spotbugs"
 
 jacoco {
     toolVersion = "0.8.4"
@@ -7,6 +8,32 @@ jacoco {
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
+}
+
+// For SpotBugs to create 'spotbugsMain' gradle task
+sourceSets {
+    main {
+        java.srcDirs = []
+    }
+}
+
+spotbugs {
+    ignoreFailures = true
+    reportsDir = file("$project.buildDir/SpotBugsReports")
+    effort = "max"
+    reportLevel = "high"
+}
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    dependsOn 'assembleDebug'
+    classes = files("$project.buildDir/intermediates/javac") // Important to use this path
+//    excludeFilter = file("$project/spot-bugs-exclude.xml") // Optional - Explained below
+    source = fileTree('src/main/java')
+    reports {
+        // Enable HTML report only
+        html.enabled = true
+        xml.enabled = false
+    }
 }
 
 android {
