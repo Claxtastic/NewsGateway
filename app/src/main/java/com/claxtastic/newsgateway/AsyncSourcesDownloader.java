@@ -53,8 +53,13 @@ public class AsyncSourcesDownloader extends AsyncTask<String, Void, String> {
     @Override protected void onPostExecute(String sourcesJsonString) {
         ArrayList<Source> sourceList = parseSourcesJson(sourcesJsonString);
         if (sourceList != null) {
+            mainActivity.setSources(sourceList);
             ArrayList<HashSet<String>> sets = getTopicsLanguagesCountries(sourceList);
-            mainActivity.handleSourcesAPIResponse(sourceList, sets);
+
+            mainActivity.setTopics(sets.get(0));
+            mainActivity.setLanguages(sets.get(1));
+            mainActivity.setCountries(sets.get(2));
+            mainActivity.setDrawerListAdapter();
         }
     }
 

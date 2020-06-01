@@ -12,7 +12,6 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Source> currentSources;
     private ArrayList<Source> allSources;
+    private HashSet<String> topics;
+    private ArrayList<String> languages;
+    private ArrayList<String> countries;
+
     private List<Fragment> fragments = new ArrayList<>();
     private HashMap<String, Integer> topicIntMap = new HashMap<>();
     private String categoryExpanded;
@@ -81,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        menuBar = menu;
-        return true;
+        this.menuBar = menu;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -152,61 +155,39 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.syncState();
     }
 
-    /* Response from AsyncSourcesDownloader */
-    public void handleSourcesAPIResponse(ArrayList<Source> sources, ArrayList<HashSet<String>> sets) {
-        HashSet<String> topics = sets.get(0);
-        HashSet<String> languages = sets.get(1);
-        HashSet<String> countries = sets.get(2);
+    /* Callback from AsyncSourcesDownloader */
+    public void setSources(ArrayList<Source> sources) {
+        /* Save sources twice so we can revert filters */
+        this.allSources = new ArrayList<>();
+        allSources.addAll(sources);
+        this.currentSources = sources;
+    }
 
-        /* Add topics to topics submenu */
-        MenuItem item = menuBar.getItem(0);
-        SubMenu subMenu = item.getSubMenu();
-        subMenu.add("all");
+    /* Callback from AsyncSourcesDownloader */
+    public void setTopics(HashSet<String> topics) {
         int i = 0;
         for (String topic: topics) {
             SpannableString topicString = new SpannableString(topic);
             topicString.setSpan(new ForegroundColorSpan(topicColors[i]), 0, topicString.length(), 0);
             topicIntMap.put(topic, topicColors[i]);
-            subMenu.add(topicString);
+//            subMenu.add(topicString);
             i++;
         }
+        this.topics = topics;
+    }
 
-        for (Source source : sources) {
-            if (topicIntMap.containsKey(source.getCategory())) {
-                int color = topicIntMap.get(source.getCategory());
-                SpannableString coloredString = new SpannableString(source.getName());
-                coloredString.setSpan(new ForegroundColorSpan(color), 0, source.getName().length(), 0);
-                source.setColoredName(coloredString);
-            }
-        }
+    /* Callback from AsyncSourcesDownloader */
+    public void setLanguages(HashSet<String> languages) {
+        this.languages = Utilities.parseLanguageJson(languages, getResources().openRawResource(R.raw.language_codes));
+    }
 
-        try {
-            /* Add languages to languages submenu */
-            item = menuBar.getItem(1);
-            subMenu = item.getSubMenu();
-            subMenu.add("all");
-            ArrayList<String> fullLanguageStrings = Utilities.parseLanguageJson(languages, getResources().openRawResource(R.raw.language_codes));
-            for (String language : fullLanguageStrings)
-                subMenu.add(language);
+    /* Callback from AsyncSourcesDownloader */
+    public void setCountries(HashSet<String> countries) {
+        this.countries = Utilities.parseCountryJson(countries, getResources().openRawResource(R.raw.country_codes));
+    }
 
-            /* Add countries to countries submenu */
-            item = menuBar.getItem(2);
-            subMenu = item.getSubMenu();
-            subMenu.add("all");
-            ArrayList<String> fullCountryStrings = Utilities.parseCountryJson(countries, getResources().openRawResource(R.raw.country_codes));
-            for (String country : fullCountryStrings)
-                subMenu.add(country);
-
-        } catch (Exception e) {
-            Log.e(TAG, "handleSourcesAPIResponse: ", e);
-        }
-
-        /* Save downloaded sources twice */
-        this.allSources = new ArrayList<>();
-        allSources.addAll(sources);
-        this.currentSources = sources;
-
-//        this.drawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_item, this.currentSources));
+    /* Callback from AsyncSourcesDownloader */
+    public void setDrawerListAdapter() {
         this.drawerList.setAdapter(new SourceArrayAdapter(this, R.layout.drawer_item, this.currentSources));
         setTitle("News Gateway (" + this.currentSources.size() + ")");
     }

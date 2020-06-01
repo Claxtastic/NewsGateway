@@ -39,6 +39,7 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+    testOptions.unitTests.includeAndroidResources true
     defaultConfig {
         applicationId "com.claxtastic.newsgateway"
         minSdkVersion 23

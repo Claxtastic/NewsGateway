@@ -1,24 +1,13 @@
 package com.claxtastic.newsgateway;
 
-import android.content.Context;
-
-import androidx.test.core.app.ApplicationProvider;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
-@RunWith(RobolectricTestRunner.class)
 public class TestUtilities {
 
     @Test
@@ -87,12 +76,5 @@ public class TestUtilities {
         ArrayList<Source> expectedList = new ArrayList<>();
         expectedList.add(s2);
         assertEquals(expectedList, Utilities.filterOnLanguage(unfilteredSources, "German"));
-    }
-
-    @Test
-    public void testParseLanguageJson() {
-        final Context context = ApplicationProvider.getApplicationContext();
-
-//        Utilities.parseCountryJson(countries, context.getResources().openRawResource(R.raw.country_codes));
     }
 }
