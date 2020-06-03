@@ -29,11 +29,15 @@ public class AsyncArticleDownloader extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        Uri dataUri = Uri.parse(BASE_URL + sourceName + API_PARAM + KEY);
-        String urlToUse = dataUri.toString();
-
-        StringBuilder sb = new StringBuilder();
         try {
+            if (sourceName == null) {
+                throw new NullPointerException();
+            }
+
+            Uri dataUri = Uri.parse(BASE_URL + sourceName + API_PARAM + KEY);
+            String urlToUse = dataUri.toString();
+
+            StringBuilder sb = new StringBuilder();
             URL url = new URL(urlToUse);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -44,11 +48,11 @@ public class AsyncArticleDownloader extends AsyncTask<String, Void, String> {
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append('\n');
             }
+            return sb.toString();
         } catch (Exception e) {
             Log.e(TAG, "doInBackground: ", e);
             return null;
         }
-        return sb.toString();
     }
 
     @Override
@@ -74,8 +78,6 @@ public class AsyncArticleDownloader extends AsyncTask<String, Void, String> {
 
                 String publishedAt = "";
                 try {
-//                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-//                    Date date = dateFormat.parse(articleJsonObject.getString("publishedAt"));
                     String[] parts = articleJsonObject.getString("publishedAt").split("-");
                     String year = parts[0];
                     String month = parts[1];

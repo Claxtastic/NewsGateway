@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.closeDrawer(drawerList);
     }
 
-    /* Response from AsyncArticleDownloader */
+    /* Callback from AsyncArticleDownloader */
     public void handleArticlesAPIResponse(ArrayList<Article> articles) {
         setTitle(selectedSourceName);
         for (int i = 0; i < articlePagerAdapter.getCount(); i++)
@@ -232,4 +232,6 @@ public class MainActivity extends AppCompatActivity {
 
         pager.setCurrentItem(0);
     }
+
+    public String getCategoryExpanded() { return this.categoryExpanded; }
 }

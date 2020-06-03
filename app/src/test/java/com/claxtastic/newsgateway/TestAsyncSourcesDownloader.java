@@ -20,6 +20,7 @@ public class TestAsyncSourcesDownloader {
         MainActivity mainActivity = Robolectric.buildActivity(MainActivity.class).create().get();
         AsyncSourcesDownloader downloaderThread = new AsyncSourcesDownloader(mainActivity);
         downloaderThread.execute();
+
         try {
             JSONObject response = new JSONObject(downloaderThread.get());
             String responseCode = response.getString("status");

@@ -10,32 +10,32 @@ import static junit.framework.TestCase.assertTrue;
 
 public class TestUtilities {
 
-    @Test
-    public void testGetLanguageCode() {
-        File languageJson = new File("src/main/res/raw/language_codes.json");
-        try {
-            String languageCode = Utilities.getLanguageCode("English", new FileInputStream(languageJson));
-            assertTrue("en".equals(languageCode));
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found exception for path: \nsrc/main/res/raw/language_codes.json");
-        }
-    }
+//    @Test
+//    public void testGetLanguageCode() {
+//        File languageJson = new File("src/main/res/raw/language_codes.json");
+//        try {
+//            String languageCode = Utilities.getLanguageCode("English", new FileInputStream(languageJson));
+//            assertTrue("en".equals(languageCode));
+//        } catch (FileNotFoundException e) {
+//            System.out.println("File not found exception for path: \nsrc/main/res/raw/language_codes.json");
+//        }
+//    }
 
     @Test(expected = NullPointerException.class)
     public void testGetLanguageCodeException() {
         Utilities.getLanguageCode("United States", null);
     }
 
-    @Test
-    public void testGetCountryCode() {
-        File countryJson = new File("src/main/res/raw/country_codes.json");
-        try {
-            String countryCode = Utilities.getCountryCode("United States", new FileInputStream(countryJson));
-            assertTrue("us".equals(countryCode));
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found exception for path: \nsrc/main/res/raw/language_codes.json");
-        }
-    }
+//    @Test
+//    public void testGetCountryCode() {
+//        File countryJson = new File("src/main/res/raw/country_codes.json");
+//        try {
+//            String countryCode = Utilities.getCountryCode("United States", new FileInputStream(countryJson));
+//            assertTrue("us".equals(countryCode));
+//        } catch (FileNotFoundException e) {
+//            System.out.println("File not found exception for path: \nsrc/main/res/raw/language_codes.json");
+//        }
+//    }
 
     @Test(expected = NullPointerException.class)
     public void testGetCountryCodeException() {
