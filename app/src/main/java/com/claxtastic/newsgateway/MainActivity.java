@@ -111,42 +111,28 @@ public class MainActivity extends AppCompatActivity {
                 switch (categoryExpanded) {
                     /* topic type selected */
                     case "topics":
-                        if (item.getTitle().equals("all")) {
-                            Toast.makeText(this, "Resetting source list", Toast.LENGTH_SHORT).show();
-                            updateDrawerList(this.allSources);
-                            return super.onOptionsItemSelected(item);
-                        }
-                        ArrayList<Source> topicFilteredSources = Utilities.filterOnTopic(this.currentSources, item.getTitle().toString());
+                        ArrayList<Source> topicFilteredSources = Utilities.filterOnTopic(this.currentSources, item.getTitle().toString().toLowerCase());
                         updateDrawerList(topicFilteredSources);
                         return super.onOptionsItemSelected(item);
                     /* language type selected */
                     case "languages":
-                        if (item.getTitle().equals("all")) {
-                            updateDrawerList(this.allSources);
-                            Toast.makeText(this, "Resetting source list", Toast.LENGTH_SHORT).show();
-                            return super.onOptionsItemSelected(item);
-                        }
                         String languageCode = Utilities.getLanguageCode((String) item.getTitle(), getResources().openRawResource(R.raw.language_codes));
                         ArrayList<Source> languageFilteredSources = Utilities.filterOnLanguage(this.currentSources, languageCode);
                         updateDrawerList(languageFilteredSources);
-
-                        for (Source source : currentSources)
-                            Log.d(TAG, "onOptionsItemSelected: " + source.getName());
                         return super.onOptionsItemSelected(item);
                     /* country type selected */
                     case "countries":
-                        if (item.getTitle().equals("all")) {
-                            Toast.makeText(this, "Resetting source list", Toast.LENGTH_SHORT).show();
-                            updateDrawerList(this.allSources);
-                            return super.onOptionsItemSelected(item);
-                        }
                         String countryCode = Utilities.getCountryCode((String) item.getTitle(), getResources().openRawResource(R.raw.country_codes));
                         ArrayList<Source> countryFilteredSources = Utilities.filterOnCountry(this.currentSources, countryCode);
                         updateDrawerList(countryFilteredSources);
                         return super.onOptionsItemSelected(item);
+                    /* "All" option selected */
+                    default:
+                        updateDrawerList(this.allSources);
+                        Toast.makeText(this, "Resetting source list", Toast.LENGTH_SHORT).show();
+                        return super.onOptionsItemSelected(item);
                 }
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -234,4 +220,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getCategoryExpanded() { return this.categoryExpanded; }
+
+    public ArrayList<Source> getCurrentSources() { return this.currentSources; }
 }
