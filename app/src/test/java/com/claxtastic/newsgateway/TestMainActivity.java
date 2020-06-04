@@ -20,7 +20,7 @@ public class TestMainActivity {
     private final int NUM_ALL_SOURCES = 128;
     private final int NUM_GENERAL_SOURCES = 75;
     private final int NUM_ENGLISH_SOURCES = 81;
-    private final int NUM_CANADA_SOURCES = 0;
+    private final int NUM_CANADA_SOURCES = 4;
 
     // Tests for onOptionsItemSelected()
     @Test
