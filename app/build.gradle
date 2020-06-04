@@ -65,6 +65,8 @@ android {
 }
 
 dependencies {
+    def fragment_version = "1.2.4"
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

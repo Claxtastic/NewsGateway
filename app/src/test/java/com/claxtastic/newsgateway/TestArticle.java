@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 public class TestArticle {
 
-    // TODO: Make these assertALl
-
     @Test
     public void testArticleConstructor() {
         Article a = new Article("", "", "","","","");

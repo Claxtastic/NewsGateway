@@ -3,9 +3,12 @@ package com.claxtastic.newsgateway;
 import android.text.SpannableString;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(RobolectricTestRunner.class)
 public class TestSource {
 
     @Test
@@ -22,8 +25,7 @@ public class TestSource {
         assertEquals("General", s.getCategory());
         assertEquals("English", s.getLanguage());
         assertEquals("United States", s.getCountry());
-        // TODO: Mock SpannableString
-        // assertEquals(new SpannableString(s.getName()), s.getColoredName());
+        assertEquals(new SpannableString(s.getName()), s.getColoredName());
     }
 
     @Test
@@ -41,7 +43,6 @@ public class TestSource {
         assertEquals("Sports", s.getCategory());
         assertEquals("English (America)", s.getLanguage());
         assertEquals("United States of America", s.getCountry());
-        // TODO: Mock SpannableString
-        // assertEquals(new SpannableString(s.getName()), s.getColoredName());
+        assertEquals(new SpannableString(s.getName()), s.getColoredName());
     }
 }
